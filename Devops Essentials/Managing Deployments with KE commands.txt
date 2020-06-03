@@ -1,0 +1,75 @@
+    1  gcloud config set compute/zone us-central1-a
+    2  git clone https://github.com/googlecodelabs/orchestrate-with-kubernetes.git
+    3  cd orchestrate-with-kubernetes/kubernetes
+    4  gcloud container clusters create bootcamp --num-nodes 5 --scopes "https://www.googleapis.com/auth/projecthosting,storage-rw"
+    5  kubectl explain deployment
+    6  kubectl explain deployment --recursive
+    7  kubectl explain deployment.metadata.name
+    8  clear
+    9  vi deployments/auth.yaml
+   10  cat deployments/auth.yaml
+   11  clear
+   12  kubectl -f create deployments/auth.yaml
+   13  kubectl create -f deployments/auth.yaml
+   14  kubectl get deployments
+   15  kubectl get replicasets
+   16  kubectl get pods
+   17  cat services/auth.yaml
+   18  kubectl create -f services/auth.yaml
+   19  kubectl get services
+   20  clear
+   21  cat deployments/hello.yaml
+   22  clear
+   23  cat services/hello.yaml
+   24  clear
+   25  kubectl create -f deployments/hello.yaml
+   26  kubectl create -f services/hello.yaml
+   27  cat deployments/frontend.yaml
+   28  clear
+   29  kubectl create secret generic tls-certs --from-file tls/
+   30  kubectl create configmap nginx-frontend-conf --from-file=nginx/frontend.conf
+   31  kubectl create -f deployments/frontend.yaml
+   32  kubectl create -f services/frontend.yaml
+   33  kubectl get sevices
+   34  kubectl get services
+   35  curl -ks https://104.155.191.161
+   36  curl -ks https://`kubectl get svc frontend -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`
+   37  kubectl get svc
+   38  clear
+   39  kubectl explain deployment.spec.replicas
+   40  clear
+   41  kubectl scale deployment hello --replicas=5
+   42  kubectl get pods | grep hello- | wc -l
+   43  kubectl get pods | grep hello-
+   44  kubectl scale deployment hello --replicas=3
+   45  kubectl get pods | grep hello- | wc -l
+   46  clear
+   47  kubectl edit deployment hello
+   48  kubectl get replicaset
+   49  kubectl rollout history deployments/hello
+   50  kubectl rollout pause deployments/hello
+   51  kubectl rollout status deployment/hello
+   52  kubectl get pods -o jsonpath --template='{range .items[*]}{.metadata.name}{"\t"}{"\t"}{.spec.containers[0].image}{"\n"}{end}'
+   53  kubectl rollout resume deployments/hello
+   54  kubectl rollout status deployments/hello
+   55  kubectl rollout resume deployment/hello
+   56  kubectl rollout undo deployment/hello
+   57  kubectl rollout history deployment/hello
+   58  kubectl get pods -o jsonpath --template='{range .items[*]}{.metadata.name}{"\t"}{"\t"}{.spec.containers[0].image}{"\n"}{end}'
+   59  clear
+   60  cat deployments/hello-canary.yaml
+   61  vi deployments/hello-canary.yaml
+   62  kubectl create -f deployments/hello-canary.yaml
+   63  clear
+   64  kubectl get deployments
+   65  curl -ks https://`kubectl get svc frontend -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version
+   66  clear
+   67  kubectl apply -f services/hello-blue.yaml
+   68  cat deployments/hello-green.yaml
+   69  clear
+   70  kubectl create -f deployments/hello-green.yaml
+   71  curl -ks https://`kubectl get svc frontend -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version
+   72  kubectl apply -f services/hello-green.yaml
+   73  curl -ks https://`kubectl get svc frontend -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version
+   74  kubectl apply -f services/hello-blue.yaml
+   75  curl -ks https://`kubectl get svc frontend -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version

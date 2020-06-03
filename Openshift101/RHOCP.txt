@@ -1,0 +1,28 @@
+    7  df -h
+    8  while sleep 1; do curl -s http://node-s-2-i-openshift-example-health.openshiftworldtourrio12-0e3e0ef4c9c6d831e8aa6fe01f33bfc4-0000.eu-gb.containers.appdomain.cloud/info
+    9  clear
+   10  oc
+   11  oc status
+   12  oc projects
+   13  oc project
+   14  clear
+   15  oc describe deployment node-s-2-i-openshift
+   16  oc describe deployment node-s-2i-openshift
+   17  oc describe deployment node-s2i-openshift
+   18  oc
+   19  clear
+   20  oc describe deployment node-s2i-openshift
+   21  git clone https://github.com/IBM/node-build-config-openshift
+   22  cd node-build-config-openshift
+   23  ls
+   24  vi Dockerfile 
+   25  oc login https://c100-e.us-south.containers.cloud.ibm.com:30403 --token=jWX7a04tRgpdhW_iofWuHqb_Ygp8fFsUkRjOK7_QyFQ
+   26  oc login --token=ngdDZPRIH15mndpAgbln4oP03mCp7c5iFtMez5viqw8 --server=https://c100-e.eu-gb.containers.cloud.ibm.com:30712
+   27  oc new-project example-health-ns
+   28  oc new-build --strategy docker --binary --docker-image node:10 --name example-health
+   29  oc start-build example-health --from-dir . --follow
+   30  oc new-app -i example-health
+   31  oc expose svc/example-health
+   32  oc get routes
+   33  clear
+   34  history

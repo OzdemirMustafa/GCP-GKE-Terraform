@@ -1,0 +1,66 @@
+    1  gcloud config set compute/zone us-central1-b
+    2  clear
+    3  gcloud config set compute/zone us-central1-b
+    4  gcloud container clusters create io
+    5  git clone https://github.com/googlecodelabs/orchestrate-with-kubernetes.git
+    6  cd orchestrate-with-kubernetes/kubernetes
+    7  ls
+    8  alias k=kubectl
+    9  alias kcd=kubectl create deployment
+   10  alias c=create
+   11  alias d=deployment
+   12  kcd nginx --image=nginx:1.10.0
+   13  k c d --image=nginx:1.10.0
+   14  k create deployment --image=nginx:1.10.0
+   15  k c d nginx  --image=nginx:1.10.0
+   16  k create deployment nginx  --image=nginx:1.10.0
+   17  k get pods
+   18  k expose deployment nginx --port 80 --type LoadBalancer
+   19  k get svc
+   20  curl http://104.197.61.103:80
+   21  cat pods/monolith.yaml
+   22  k create -f pods/monolith.yaml
+   23  k get pods
+   24  k get pods -o wide
+   25  k describe pods monolith
+   26  curl http://127.0.0.1:10080
+   27  curl http://127.0.0.1:10080/secure
+   28  curl -u user http://127.0.0.1:10080/login
+   29  TOKEN=$(curl http://127.0.0.1:10080/login -u user|jq -r '.token')
+   30  curl -H "Authorization: Bearer $TOKEN" http://127.0.0.1:10080/secure
+   31  k logs monolith
+   32  k exec monolith -stdin --tty -c monolith /bin/sh
+   33  kubectl exec monolith --stdin --tty -c monolith /bin/sh
+   34  cat pods/secure-monolith.yaml
+   35  kubectl create secret generic tls-certs --from-file tls/
+   36  kubectl create configmap nginx-proxy-conf --from-file nginx/proxy.conf
+   37  kubectl create -f pods/secure-monolith.yaml
+   38  cat services/monolith.yaml
+   39  kubectl create -f services/monolith.yaml
+   40  gcloud compute firewall-rules create allow-monolith-nodeport   --allow=tcp:31000
+   41  gcloud compute instances list
+   42  curl -k https://34.71.255.187:31000
+   43  k get svc monolith
+   44  k describe svc monolith
+   45  kubectl get pods -l "app=monolith"
+   46  kubectl get pods -l "app=monolith,secure=enabled"
+   47  kubectl label pods secure-monolith 'secure=enabled'
+   48  kubectl get pods secure-monolith --show-labels
+   49  kubectl describe services monolith | grep Endpoints
+   50  gcloud compute instances list
+   51  curl -k https://34.71.255.187:31000
+   52  clear
+   53  cat deployments/auth.yaml
+   54  kubectl create -f deployments/auth.yaml
+   55  kubectl create -f services/auth.yaml
+   56  kubectl create -f deployments/hello.yaml
+   57  kubectl create -f services/hello.yaml
+   58  kubectl create configmap nginx-frontend-conf --from-file=nginx/frontend.conf
+   59  kubectl create -f deployments/frontend.yaml
+   60  kubectl create -f services/frontend.yaml
+   61  kubectl get services frontend
+   62  curl -k https:
+   63  kubectl get services frontend
+   64  curl -k https:35.192.27.223
+   65  curl -k https://35.192.27.223
+   66  history

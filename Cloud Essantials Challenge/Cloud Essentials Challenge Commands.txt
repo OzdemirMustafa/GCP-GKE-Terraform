@@ -1,0 +1,61 @@
+    1  clear
+    2  export PROJECT_ID=qwiklabs-gcp-04-5ccc07e93db6
+    3  export ZONE=us-central1-a
+    4  echo PROJECT_ID
+    5  export $PROJECT_ID
+    6  echo $PROJECT_ID
+    7  echo $ZONE
+    8  clear
+    9  gcloud compute instances create nucleus-jumpshot --machine-type f1-micro-1 --zone $ZONE
+   10  gcloud compute machine-types list --zones
+   11  clerclear
+   12  clear
+   13  gcloud compute machine-types list --zones
+   14  gcloud compute machine-types list --help
+   15  clear
+   16  gcloud container clusters create my-host
+   17  clear
+   18  gcloud config set compute/zone us-east1-b
+   19  gcloud container clusters create my-host
+   20  gcloud container clusters get-credentials my-host
+   21  kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:2.0
+   22  kubectl create deployment hello-app --image=gcr.io/google-samples/hello-app:2.0
+   23  kubectl expose deployment hello-app --type=LoadBalancer --port 8080
+   24  kubectl get services
+   25  clear
+   --------------------------------------------------------------------------------------------------------------------------
+                                   Load Balancer Instance
+   26  cat << EOF > startup.sh
+#! /bin/bash
+apt-get update
+apt-get install -y nginx
+service nginx start
+sed -i -- 's/nginx/Google Cloud Platform - '"\$HOSTNAME"'/' /var/www/html/index.nginx-debian.html
+EOF
+   27  gcloud compute instance-templates create nginx-template          --metadata-from-file startup-script=startup.sh
+   28  gcloud compute target-pools create nginx-pool
+   29  gcloud compute instance-groups managed create nginx-group          --base-instance-name nginx          --size 2          --template nginx-template          --t
+arget-pool nginx-pool
+   30  gcloud compute instances list
+   31  clear
+   32  gcloud compute instances list
+   33  gcloud compute firewall-rules create www-firewall --allow tcp:80
+--------------------------------------------------------------------------------------------------------------------------
+                              Creating Https Load Balancers
+   34  gcloud compute http-health-checks create http-basic-check
+   35  gcloud compute instance-groups managed        set-named-ports nginx-group        --named-ports http:80
+   36  gcloud compute backend-services create nginx-backend       --protocol HTTP --http-health-checks http-basic-check --global
+   37  gcloud compute backend-services add-backend nginx-backend     --instance-group nginx-group     --instance-group-zone us-central1-a     --global
+   38  gcloud compute backend-services add-backend nginx-backend     --instance-group nginx-group     --instance-group-zone us-central1-a     --global
+   39  gcloud compute backend-services create nginx-backend       --protocol HTTP --http-health-checks http-basic-check --global
+   40  gcloud compute instance-groups managed        set-named-ports nginx-group        --named-ports http:80
+   41  gcloud compute backend-services create nginx-backend       --protocol HTTP --http-health-checks http-basic-check --global
+   42  gcloud compute backend-services create nginx-backend       --protocol HTTP --http-health-checks http-basic-check --global
+   43  gcloud compute backend-services add-backend nginx-backend     --instance-group nginx-group     --instance-group-zone us-central1-a     --global
+   44  gcloud compute backend-services add-backend nginx-backend     --instance-group nginx-group     --instance-group-zone us-east1-b     --global
+   45  clear
+   46  gcloud compute backend-services add-backend nginx-backend \ --instance-group nginx-group \ --instance-group-zone us-east1-b \ --global
+   47  gcloud compute url-maps create web-map     --default-service nginx-backend
+   48  gcloud compute target-http-proxies create http-lb-proxy     --url-map web-map
+   49  gcloud compute forwarding-rules create http-content-rule         --global         --target-http-proxy http-lb-proxy         --ports 80
+   50  gcloud compute forwarding-rules list

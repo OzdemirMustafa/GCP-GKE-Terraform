@@ -1,0 +1,109 @@
+    1  docker
+    2  clear
+    3  docker run hello-word
+    4  docker run hello-world
+    5  clear
+    6  docker images
+    7  docker ps
+    8  clear
+    9  docker images
+   10  docker run hello-world
+   11  clear
+   12  docker ps -a
+   13  mkdir test && cd test
+   14  cat > Dockerfile <<EOF
+   15  # Use an official Node runtime as the parent image
+   16  FROM node:6
+   17  # Set the working directory in the container to /app
+   18  WORKDIR /app
+   19  # Copy the current directory contents into the container at /app
+   20  ADD . /app
+   21  # Make the container's port 80 available to the outside world
+   22  EXPOSE 80
+   23  # Run app.js using node when the container launches
+   24  CMD ["node", "app.js"]
+   25  EOF
+   26  clear
+   27  cat > app.js <<EOF
+   28  const http = require('http');
+   29  const hostname = '0.0.0.0';
+   30  const port = 80;
+   31  const server = http.createServer((req, res) => {
+   32      res.statusCode = 200;
+   33        res.setHeader('Content-Type', 'text/plain');
+   34          res.end('Hello World\n');
+   35  });
+   36  server.listen(port, hostname, () => {
+   37      console.log('Server running at http://%s:%s/', hostname, port);
+   38  });
+   39  process.on('SIGINT', function() {
+   40      console.log('Caught interrupt signal and will exit');
+   41      process.exit();
+   42  });
+   43  EOF
+   44  clear
+   45  docker build -t node-app:0.1 .
+   46  clear
+   47  docker images
+   48  curl http://localhost:4000
+   49  docker stop my-app && docker rm my-app
+   50  docker run -p 4000:80 -name my-app -d node-app:0.1
+   51  docker run -p 4000:80 --name my-app -d node-app:0.1
+   52  docker ps
+   53  docker ps -o wide
+   54  docker ps
+   55  docker logs 4f
+   56  cd test
+   57  nano app.js
+   58  docker build -t node-app:0.2 .
+   59  clear
+   60  docker run -p 8080:80 --name my-app-2 -d node-app:0.2
+   61  docker ps
+   62  curl http://localhost:8080
+   63  curl http://localhost:4000
+   64  docker logs -f 9c80fdc7e2bb
+   65  docker exec -it 9c bash
+   66  docker inspect 9c
+   67  docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' [container_id]
+   68  docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 9c
+   69  docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 4
+   70  docker ps
+   71  docker stop 9c
+   72  docker rm 9c
+   73  docker stop 4f
+   74  docker rm 4f
+   75  docker images
+   76  docker stop node-app:0.1
+   77  docker rm node-app:0.1
+   78  docker image rm node-app
+   79  docker image rm node-app:0.1
+   80  docker image rm node-app:0.2
+   81  docker images
+   82  clear
+   83  gcloud config list project
+   84  docker tag node-app:0.2 gcr.io/qwiklabs-gcp-04-2e43032f2c30/node-app:0.2
+   85  cat > Dockerfile <<EOF
+   87  docker build -t node-app:0.1 .
+   88  docker run -p 4000:80 --name my-app node-app:0.1
+   89  nano app.js
+   90  docker build -t node-app:0.2 .
+   91  docker run -p 8080:80 --name my-app-2 -d node-app:0.2
+   92  docker ps
+   93  docker tag node-app:0.2 gcr.io/qwiklabs-gcp-04-2e43032f2c30/node-app:0.2
+   94  docker images
+   95  docker push gcr.io/qwiklabs-gcp-04-2e43032f2c30/node-app:0.2
+   96  docker stop $(docker ps -q)
+   97  docker rm $(docker ps -aq)
+   98  docker rmi node-app:0.2 gcr.io/[project-id]/node-app node-app:0.1
+   99  docker rmi node:6
+  100  docker rmi $(docker images -aq) # remove remaining images
+  101  docker images
+  102  xdocker pull gcr.io/[project-id]/node-app:0.2
+  103  docker run -p 4000:80 -d gcr.io/[project-id]/node-app:0.2
+  104  curl http://localhost:4000
+  105  docker pull gcr.io/[project-id]/node-app:0.2
+  106  docker run -p 4000:80 -d gcr.io/[project-id]/node-app:0.2
+  107  docker pull gcr.io/qwiklabs-gcp-04-2e43032f2c30/node-app:0.2 docker run -p 4000:80 -d gcr.io/qwiklabs-gcp-04-2e43032f2c30/node-app:0.2 curl http://localhost:4000
+  108  docker pull gcr.io/qwiklabs-gcp-04-2e43032f2c30/node-app:0.2
+  109  docker run -p 4000:80 -d gcr.io/qwiklabs-gcp-04-2e43032f2c30/node-app:0.2
+  110  curl http://localhost:4000

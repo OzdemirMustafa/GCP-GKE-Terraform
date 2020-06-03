@@ -1,0 +1,11 @@
+    1  gcloud auth list
+    2  gcloud config list project
+    3  gcloud config set compute/zone us-east1-b
+    4  clear
+    5  gcloud container clusters create my-host
+    6  gcloud container clusters get-credentials my-cluster
+    7  kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:2.0
+    8  kubectl expose deployment hello-server --type=LoadBalancer --port 8080
+    9  kubectl get services
+   10  clear
+   11  gcloud container clusters delete my-cluster

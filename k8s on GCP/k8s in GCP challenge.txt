@@ -1,0 +1,44 @@
+   12  step1.sh
+   13  docker run -p 8080:8080 valkyrie-app:v0.0.1 &
+   14  step2.sh
+   15  docker tag valkyrie-app:v0.0.1 gcr.io/qwiklabs-gcp-02-ea62c297f164/valkyrie-app:v0.0.1
+   16  docker push valkyrie-app:v0.0.1 gcr.io/qwiklabs-gcp-02-ea62c297f164/valkyrie-app:v0.0.1
+   17  docker push gcr.io/qwiklabs-gcp-02-ea62c297f164/valkyrie-app:v0.0.1
+   18  ls
+   19  cd k8s/
+   20  ls
+   21  nano deployment.yaml
+   22  cd ..
+   23  sed -i s#IMAGE_HERE#gcr.io/qwiklabs-gcp-02-ea62c297f164/valkyrie-app:v0.0.1#g k8s/deployment.yaml
+   24  cd k8s/
+   25  nano deployment.yaml
+   26  cd ..
+   27  ls
+   28  gcloud container clusters get-credentials valkyrie-dev --z=us-east1-d
+   29  gcloud container clusters get-credentials valkyrie-dev -z=us-east1-d
+   30  clear
+   31  kubectl create -f k8s/deployment.yaml
+   32  kubectl create -f k8s/service.yaml
+   33  git merge origin/kurt-dev
+   34  kubectl edit deployment valkyrie-dev
+   35  docker build -t gcr.io/qwiklabs-gcp-02-ea62c297f164/valkyrie-app:v0.0.2 .
+   36  docker push gcr.io/qwiklabs-gcp-02-ea62c297f164/valkyrie-app:v0.0.2
+   37  kubectl edit deployment valkyrie-dev
+   38  docker ps
+   39  docker kill 590
+   40  export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/component=jenkins-master" -l "app.kubernetes.io/instance=cd" -o jsonpath="{.items[0].metadata.name}")
+   41  kubectl port-forward $POD_NAME 8080:8080 >> /dev/null &
+   42  printf $(kubectl get secret cd-jenkins -o jsonpath=”{.data.jenkins-admin-password}” | base64 — decode);echo
+   43  printf $(kubectl get secret cd-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+   44  gcloud repos list
+   45  gcloud source repos list
+   46  clear
+   47  sed -i "s/green/orange/g" source/html.go
+   48  ls
+   49  nano Jenkinsfile
+   50  git config --global user.email “mustfaozdmir@gmail.com”
+   51  git config --global user.name “Mustafa”
+   52  git add .
+   53  git commit -m “build pipeline init”
+   54  git commit -m "build pipeline init"
+   55  git push
